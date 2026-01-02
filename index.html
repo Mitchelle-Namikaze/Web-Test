@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Welcome | Borteh's Luxury</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="../assets/css/images/logo1.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-[#FADADD] overflow-hidden">
+
+    <div id="splash-screen" class="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-[#FADADD]">
+        <div class="relative w-40 h-40 mb-6">
+            <img src="assets/css/images/logo.png" alt="Borteh Logo" class="w-full h-full object-cover logo-glow">
+        </div>
+        <p class="text-[#5D4037] font-semibold tracking-[0.2em] text-sm mb-2 animate-subtext">YOUR TRUSTED VENDOR</p>
+        <h1 class="text-4xl font-bold text-[#5D4037] serif-font animate-title">Since 2021</h1>
+    </div>
+
+    <script>
+        // REDIRECT LOGIC:
+        // Since home.html is inside the 'html' folder, we must point there.
+        setTimeout(() => {
+            window.location.href = 'html/home.html';
+        }, 4000);
+    </script>
+</body>
+</html>

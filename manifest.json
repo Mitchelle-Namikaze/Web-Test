@@ -1,7 +1,7 @@
 {
   "name": "Borteh's Collection",
   "short_name": "Borteh",
-  "start_url": "./html/index.html",
+  "start_url": "./index.html", 
   "display": "standalone",
   "background_color": "#FCF9F6",
   "theme_color": "#4A3B32",

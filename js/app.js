@@ -194,8 +194,6 @@ function loadTheme() {
 }
 
 // --- SEARCH & FAVORITES (Keep existing logic) ---
-// (Copy your existing toggleHeart, renderFavorites, and handleSearch logic here)
-// I will include brief versions to ensure code works:
 
 function toggleHeart(id) { 
     if (favorites.includes(id)) favorites = favorites.filter(f => f !== id);
@@ -253,7 +251,8 @@ function handleSearch(query) {
     }
 }
 
-// --- PWA INSTALL (Keep existing) ---
+// --- PWA INSTALL & SERVICE WORKER ---
+
 function initInstallButtons() {
     const buttons = document.querySelectorAll('.install-app-btn');
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -272,5 +271,16 @@ function initInstallButtons() {
     });
     window.addEventListener('appinstalled', () => {
         buttons.forEach(btn => btn.style.display = 'none');
+    });
+}
+
+// --- NEW: SERVICE WORKER REGISTRATION ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // Points to root because service-worker.js is in the same folder as index.html
+      // Using '../' because app.js is inside the /js/ folder
+      navigator.serviceWorker.register('../service-worker.js')
+        .then(reg => console.log('[App] Service Worker registered', reg))
+        .catch(err => console.error('[App] Service Worker registration failed', err));
     });
 }

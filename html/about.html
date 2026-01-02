@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Borteh's Luxury</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="../assets/css/images/logo.png">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased bg-[var(--bg-main)]">
+
+    <header class="flex flex-col lg:flex-row lg:justify-between lg:items-center p-6 pt-8 lg:py-4 sticky top-0 z-40 lg:z-50 glass-nav transition-all">
+        <div class="flex justify-between items-center w-full lg:w-auto">
+            <div class="flex items-center gap-3">
+                <img src="../assets/css/images/logo.png" class="w-10 h-10 lg:w-12 lg:h-12 rounded-full border border-[#C6A87C]">
+                <div>
+                    <p class="text-[10px] text-[#C6A87C] font-bold uppercase tracking-widest">Welcome To</p>
+                    <h1 class="text-lg lg:text-xl font-bold serif-font text-primary">Borteh's Luxury</h1>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 lg:hidden">
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center transition-colors">
+                    <i id="theme-icon-mobile" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="home.html" class="text-primary hover:text-accent font-bold text-sm">Home</a>
+            <a href="wishlist.html" class="text-primary hover:text-accent font-bold text-sm">Wishlist</a>
+            <a href="about.html" class="text-accent font-bold text-sm">About Us</a>
+            <a href="./admin/login.html" class="text-primary hover:text-accent font-bold text-sm">Account</a>
+            <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-300">
+                <i id="theme-icon-desktop" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400 text-xs"></i>
+            </button>
+        </div>
+
+        <div class="w-full lg:w-96 mt-4 lg:mt-0 relative z-50">
+            <input type="text" id="search-input" placeholder="Search for luxury..." class="w-full py-3 lg:py-2 pl-12 pr-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm outline-none text-sm bg-[var(--bg-card)] text-[var(--text-primary)]">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 lg:top-2.5 text-[#C6A87C]"></i>
+            <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#2D2D2D] rounded-xl shadow-xl max-h-64 overflow-y-auto p-2 border border-gray-100 dark:border-gray-700"></div>
+        </div>
+        
+        <div class="hidden lg:block ml-4">
+             <a href="cart.html" class="gold-btn w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                <i class="fa-solid fa-cart-shopping text-sm"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-10 pb-32">
+        <div class="flex items-center gap-4 mb-8">
+            <img src="../assets/css/images/logo.png" class="w-12 h-12 rounded-full">
+            <h2 class="text-3xl font-bold serif-font text-primary">Our Story</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div>
+                <div class="w-full h-80 bg-gray-200 dark:bg-gray-800 rounded-3xl mb-6 overflow-hidden flex items-center justify-center border border-[#C6A87C]/20">
+                    <i class="fa-solid fa-user text-6xl text-gray-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-primary serif-font mb-3">Meet Borteh</h3>
+                <p class="text-secondary leading-relaxed mb-6">The visionary CEO behind the brand. Starting in 2021, Borteh has been dedicated to bringing affordable luxury to Sierra Leone, specializing in Perfumes, Jewelry, and premium custom add-ons.</p>
+                
+                <div class="p-6 bg-[var(--bg-card)] rounded-2xl border border-[#C6A87C]/10 shadow-sm">
+                    <h3 class="font-bold text-primary mb-2"><i class="fa-solid fa-map-location-dot mr-2 text-[#C6A87C]"></i>Visit Our Showroom</h3>
+                    <p class="text-sm text-secondary">123 Main Street, Freetown.<br>Open Mon-Sat, 9AM - 6PM.</p>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-black rounded-3xl p-6 h-48 flex flex-col items-center justify-center relative cursor-pointer group">
+                    <i class="fa-solid fa-play-circle text-white text-6xl opacity-80 group-hover:scale-110 transition"></i>
+                    <p class="text-white text-xs mt-4 uppercase tracking-widest">Business Story Video</p>
+                </div>
+
+                <div class="bg-gray-800 rounded-3xl p-6 h-48 flex flex-col items-center justify-center group cursor-pointer">
+                    <i class="fa-solid fa-mobile-screen text-white text-5xl opacity-80 group-hover:bounce transition"></i>
+                    <p class="text-white text-xs mt-4 uppercase tracking-widest">App Installation Guide</p>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-bold text-primary mb-6">Connect With Us</h3>
+                    <div class="flex justify-center md:justify-start gap-6">
+                        <a href="#" class="text-3xl text-blue-600 hover:scale-120 transition"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="text-3xl text-pink-600 hover:scale-120 transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="text-3xl text-black dark:text-white hover:scale-120 transition"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass-nav flex justify-around items-center py-4 z-50 rounded-t-2xl border-t border-gray-100 dark:border-gray-800">
+        <a href="home.html" class="text-gray-400 flex flex-col items-center w-12">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Home</span>
+        </a>
+        <a href="wishlist.html" class="text-gray-400 hover:text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Wishlist</span>
+        </a>
+        <div class="relative -top-6">
+            <a href="cart.html" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center shadow-lg border-4 border-[var(--bg-main)]">
+                <i class="fa-solid fa-cart-shopping text-xl"></i>
+            </a>
+        </div>
+        <a href="about.html" class="text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-solid fa-circle-info text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">About</span>
+        </a>
+        <a href="./admin/login.html" class="text-gray-400 hover:text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-solid fa-user text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Account</span>
+        </a>
+    </nav>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

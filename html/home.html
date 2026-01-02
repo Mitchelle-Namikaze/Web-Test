@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Home | Borteh's Luxury</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" type="image/png" href="../assets/css/images/logo.png">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="../manifest.json">
+</head>
+<body class="antialiased bg-[var(--bg-main)]">
+
+    <header class="flex flex-col lg:flex-row lg:justify-between lg:items-center p-6 pt-8 lg:py-4 sticky top-0 z-40 lg:z-50 glass-nav transition-all">
+        <div class="flex justify-between items-center w-full lg:w-auto">
+            <div class="flex items-center gap-3">
+                <img src="../assets/css/images/logo.png" class="w-10 h-10 lg:w-12 lg:h-12 rounded-full border border-[#C6A87C]">
+                <div>
+                    <p class="text-[10px] text-[#C6A87C] font-bold uppercase tracking-widest">Welcome To</p>
+                    <h1 class="text-lg lg:text-xl font-bold serif-font text-primary">Borteh's Luxury</h1>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 lg:hidden">
+                <button id="install-button-mobile" class="install-app-btn hidden w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-download text-gray-600 dark:text-yellow-400"></i>
+                </button>
+
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center transition-colors">
+                    <i id="theme-icon-mobile" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="home.html" class="text-accent font-bold text-sm">Home</a>
+            <a href="wishlist.html" class="text-primary hover:text-accent font-bold text-sm">Wishlist</a>
+            <a href="about.html" class="text-primary hover:text-accent font-bold text-sm">About Us</a>
+            <a href="./admin/login.html" class="text-primary hover:text-accent font-bold text-sm">Account</a>
+            
+            <button id="install-button-desktop" class="install-app-btn hidden w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-300">
+                <i class="fa-solid fa-download text-gray-600 dark:text-yellow-400 text-xs"></i>
+            </button>
+
+            <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-300">
+                <i id="theme-icon-desktop" class="fa-solid fa-moon text-gray-600 dark:text-yellow-400 text-xs"></i>
+            </button>
+        </div>
+
+        <div class="w-full lg:w-96 mt-4 lg:mt-0 relative z-50">
+            <input type="text" id="search-input" placeholder="Search for luxury..." class="w-full py-3 lg:py-2 pl-12 pr-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm outline-none text-sm bg-[var(--bg-card)] text-[var(--text-primary)]">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 lg:top-2.5 text-[#C6A87C]"></i>
+            <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#2D2D2D] rounded-xl shadow-xl max-h-64 overflow-y-auto p-2 border border-gray-100 dark:border-gray-700"></div>
+        </div>
+        
+        <div class="hidden lg:block ml-4">
+             <a href="cart.html" class="gold-btn w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                <i class="fa-solid fa-cart-shopping text-sm"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-6">
+        
+        <div class="mb-10">
+            <div id="categories-bar" class="flex lg:grid lg:grid-cols-5 gap-6 lg:gap-10 overflow-x-auto hide-scrollbar pb-4 lg:pb-0 justify-start lg:justify-center">
+                <p class="text-xs text-gray-400 pl-2">Loading collections...</p>
+            </div>
+        </div>
+
+        <div id="home-view">
+            <div class="mb-12">
+                <div class="flex justify-between items-end mb-6">
+                    <h3 class="font-bold text-primary text-2xl serif-font">Fresh Drops</h3>
+                    <span class="text-xs text-accent uppercase font-bold tracking-widest hidden lg:inline-block"><h3>Arrivals</h3></span>
+                </div>
+                <div id="new-arrivals-container" class="flex lg:grid lg:grid-cols-4 gap-6 overflow-x-auto lg:overflow-visible pb-6 hide-scrollbar min-h-[220px]"></div>
+            </div>
+
+            <div class="pb-20">
+                <h3 class="font-bold text-primary text-2xl mb-6 serif-font">Explore Everything</h3>
+                <div id="all-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
+            </div>
+        </div>
+
+        <div id="collections-view" class="hidden pb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="goHome()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-primary hover:bg-[#C6A87C] hover:text-white transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h2 class="text-2xl font-bold serif-font text-primary">All Collections</h2>
+            </div>
+            <div id="collections-grid" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
+        </div>
+
+        <div id="category-view" class="hidden pb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="goHome()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-primary hover:bg-[#C6A87C] hover:text-white transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h2 id="category-title" class="text-2xl font-bold serif-font text-primary">Collection</h2>
+            </div>
+            <div id="category-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+    </main>
+
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass-nav flex justify-around items-center py-4 z-50 rounded-t-2xl border-t border-gray-100 dark:border-gray-800">
+        <a href="home.html" class="text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Home</span>
+        </a>
+        
+        <a href="wishlist.html" class="text-gray-400 hover:text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Wishlist</span>
+        </a>
+        
+        <div class="relative -top-6">
+            <a href="cart.html" class="gold-btn w-14 h-14 rounded-full flex items-center justify-center shadow-lg border-4 border-[var(--bg-main)]">
+                <i class="fa-solid fa-cart-shopping text-xl"></i>
+            </a>
+        </div>
+        
+        <a href="about.html" class="text-gray-400 hover:text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-solid fa-circle-info text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">About</span>
+        </a>
+        
+        <a href="./admin/login.html" class="text-gray-400 hover:text-[#C6A87C] flex flex-col items-center w-12">
+            <i class="fa-solid fa-user text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Account</span>
+        </a>
+    </nav>
+
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

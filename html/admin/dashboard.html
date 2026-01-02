@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borteh Manager Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" type="image/png" href="../../assets/css/images/logo.png">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Fade in animation for the modal */
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-animate { animation: fadeIn 0.2s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <nav class="bg-[#5D4037] text-white p-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-white text-[#5D4037] flex items-center justify-center font-bold">B</div>
+            <h1 class="font-bold text-lg tracking-wide hidden sm:block">Manager Dashboard</h1>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <a href="../index.html" target="_blank" class="text-xs text-white/80 hover:text-white flex items-center gap-1">
+                <i class="fa-solid fa-external-link-alt"></i> View Shop
+            </a>
+            <button onclick="logout()" class="text-xs bg-red-500 hover:bg-red-600 px-4 py-2 rounded shadow transition">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <div class="lg:col-span-4 space-y-6">
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-bold text-[#5D4037] mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> Add New Item
+                </h2>
+                
+                <form id="add-product-form" class="space-y-4">
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:bg-gray-50 transition cursor-pointer relative group">
+                        <input type="file" id="p-image-file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewImage(event, 'image-preview-tag', 'upload-preview')">
+                        <div id="upload-preview">
+                            <i class="fa-solid fa-cloud-upload-alt text-3xl text-gray-300 mb-2 group-hover:text-[#5D4037]"></i>
+                            <p class="text-xs text-gray-500 font-bold">Click to Upload Photo</p>
+                        </div>
+                        <img id="image-preview-tag" class="hidden w-full h-48 object-cover rounded-lg mt-2">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Product Name</label>
+                        <input type="text" id="p-name" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Price (Le)</label>
+                            <input type="number" id="p-price" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
+                            <select id="p-category" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                                <option value="" disabled selected>Select...</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                        <label class="text-sm text-gray-600 flex items-center gap-2">
+                            <input type="checkbox" id="p-new" checked class="w-4 h-4 text-[#5D4037] rounded focus:ring-0">
+                            Mark as "New Arrival"
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#5D4037] text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+                        Publish Item
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-[#D4AF37]/20 rounded-bl-full -mr-2 -mt-2"></div>
+                
+                <h2 class="text-lg font-bold text-[#5D4037] mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group"></i> Create Category
+                </h2>
+                
+                <form id="add-category-form" class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-full flex flex-col items-center justify-center cursor-pointer hover:border-[#D4AF37] relative flex-shrink-0">
+                            <input type="file" id="c-image-file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required onchange="previewImage(event, 'cat-preview-tag', 'cat-upload-icon')">
+                            <i id="cat-upload-icon" class="fa-solid fa-camera text-gray-400"></i>
+                            <img id="cat-preview-tag" class="hidden absolute inset-0 w-full h-full object-cover rounded-full">
+                        </div>
+                        
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase">Category Name</label>
+                            <input type="text" id="c-name" placeholder="e.g. Watches" required class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-white border border-[#5D4037] text-[#5D4037] hover:bg-[#5D4037] hover:text-white font-bold py-2 rounded-lg transition-colors text-sm">
+                        Add Category
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="lg:col-span-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <h2 class="text-xl font-bold text-[#5D4037]">Inventory</h2>
+                
+                <div id="category-filters" class="flex flex-wrap gap-2 bg-white rounded-lg p-1 shadow-sm">
+                    <button onclick="filterInventory('all')" class="px-4 py-1 text-xs font-bold rounded-md bg-[#5D4037] text-white">All</button>
+                    </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden min-h-[500px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 text-gray-500 text-[10px] uppercase tracking-wider">
+                        <tr>
+                            <th class="p-4">Item</th>
+                            <th class="p-4 text-center">Stock</th>
+                            <th class="p-4">Price</th>
+                            <th class="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list" class="divide-y divide-gray-100 text-sm">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="edit-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-2xl p-6 relative modal-animate">
+            
+            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h3 class="text-lg font-bold text-[#5D4037] mb-6 border-b border-gray-100 pb-2">Edit Product</h3>
+            
+            <form id="edit-product-form" class="space-y-4">
+                <input type="hidden" id="edit-id"> <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Product Name</label>
+                    <input type="text" id="edit-name" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Price</label>
+                        <input type="number" id="edit-price" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
+                        <select id="edit-category" class="w-full p-2 border border-gray-300 rounded-lg bg-white outline-none">
+                            </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-[#D4AF37] hover:bg-[#b08d2b] text-white font-bold py-3 rounded-xl mt-2 transition-colors shadow-md">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/supabase-client.js"></script>
+    <script src="../../js/admin.js"></script> 
+    
+    <script>
+        function previewImage(event, imgId, iconId) {
+            const file = event.target.files[0];
+            if(file){
+                const reader = new FileReader();
+                reader.onload = function(e){
+                    document.getElementById(imgId).src = e.target.result;
+                    document.getElementById(imgId).classList.remove('hidden');
+                    if(iconId) document.getElementById(iconId).classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

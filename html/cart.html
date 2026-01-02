@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart | Borteh's Luxury</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased bg-[var(--bg-main)]">
+
+    <header class="p-6 lg:py-4 sticky top-0 z-50 glass-nav flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="../assets/css/images/logo.png" class="w-10 h-10 rounded-full border border-[#C6A87C]">
+            <h1 class="text-xl font-bold serif-font text-primary">Borteh's Luxury</h1>
+        </div>
+        
+        <div class="hidden lg:flex gap-8">
+            <a href="home.html" class="text-primary hover:text-accent font-bold text-sm">Home</a>
+            <a href="wishlist.html" class="text-primary hover:text-accent font-bold text-sm">Wishlist</a>
+            <a href="about.html" class="text-primary hover:text-accent font-bold text-sm">About Us</a>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 py-10 pb-32">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold serif-font text-primary flex items-center gap-3">
+                <i class="fa-solid fa-shopping-bag"></i> Your Shopping Bag
+            </h2>
+            <a href="home.html" class="text-xs font-bold text-gray-400 hover:text-primary">Continue Shopping</a>
+        </div>
+
+        <div id="cart-items-container" class="space-y-4 min-h-[200px]">
+            </div>
+
+        <div class="mt-8 bg-[var(--bg-card)] p-6 rounded-2xl shadow-sm border border-[#C6A87C]/20">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                <span class="text-gray-500 font-bold">Total Estimate</span>
+                <span id="cart-total" class="text-2xl font-bold text-primary">Le 0</span>
+            </div>
+            
+            <button onclick="checkoutWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-bold flex gap-3 justify-center items-center hover:shadow-lg hover:scale-[1.02] transition-all">
+                <i class="fa-brands fa-whatsapp text-2xl"></i> 
+                <span>Complete Order via WhatsApp</span>
+            </button>
+            <p class="text-center text-[10px] text-gray-400 mt-3">We will confirm availability instantly upon receiving your message.</p>
+        </div>
+    </main>
+
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass-nav flex justify-around items-center py-4 z-50 rounded-t-2xl border-t border-gray-100 dark:border-gray-800">
+        <a href="home.html" class="text-gray-400 flex flex-col items-center w-12">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Home</span>
+        </a>
+        <a href="wishlist.html" class="text-gray-400 flex flex-col items-center w-12">
+            <i class="fa-regular fa-heart text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Wishlist</span>
+        </a>
+        <a href="cart.html" class="text-[#C6A87C] flex flex-col items-center w-12 relative -top-5">
+            <div class="bg-[var(--bg-main)] p-2 rounded-full border-t border-gray-100">
+                <div class="gold-btn w-12 h-12 rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-cart-shopping text-xl text-white"></i>
+                </div>
+            </div>
+        </a>
+        <a href="about.html" class="text-gray-400 flex flex-col items-center w-12">
+            <i class="fa-solid fa-circle-info text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">About</span>
+        </a>
+        <a href="./admin/login.html" class="text-gray-400 flex flex-col items-center w-12">
+            <i class="fa-solid fa-user text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Account</span>
+        </a>
+    </nav>
+
+    <script src="../js/cart.js"></script>
+    <script>
+        // Auto-load cart when page opens
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart(); 
+        });
+    </script>
+</body>
+</html>

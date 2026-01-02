@@ -1,0 +1,21 @@
+{
+  "name": "Borteh's Collection",
+  "short_name": "Borteh",
+  "start_url": "./html/index.html",
+  "display": "standalone",
+  "background_color": "#FCF9F6",
+  "theme_color": "#4A3B32",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/css/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/css/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

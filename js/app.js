@@ -1,3 +1,5 @@
+// js/app.js
+
 let allProductsCache = [];
 let allCategoriesCache = []; // New Cache for categories
 let favorites = JSON.parse(localStorage.getItem('bortehFavorites')) || [];
@@ -23,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- FETCH DATA ---
 
 async function fetchCategories() {
-    // Fetch categories from the new table
     const { data, error } = await window.supabaseClient
         .from('categories')
         .select('*')
@@ -63,7 +64,6 @@ function renderCategoryCircles(categories) {
     
     container.innerHTML = '';
 
-    // 1. Loop through DB categories and create Image Circles
     categories.forEach(cat => {
         container.innerHTML += `
         <div onclick="openCategory('${cat.name}')" class="flex flex-col items-center min-w-[80px] cursor-pointer group">
@@ -74,7 +74,6 @@ function renderCategoryCircles(categories) {
         </div>`;
     });
 
-    // 2. Manually add the "View All" button at the end
     container.innerHTML += `
         <div onclick="openAllCollections()" class="flex flex-col items-center min-w-[80px] cursor-pointer group">
             <div class="cat-circle bg-[#C6A87C] border-none">
@@ -85,22 +84,45 @@ function renderCategoryCircles(categories) {
     `;
 }
 
+// UPDATED: Now handles Descriptions and "Read More"
 function renderGrid(products, container) {
     if (!container) return;
     container.innerHTML = products.length === 0 ? '<p class="col-span-full text-center text-gray-400">No items available.</p>' : '';
+    
     products.forEach(p => {
         const isFav = favorites.includes(p.id);
+        
+        // Logic to truncate description
+        let descHtml = '';
+        if (p.description) {
+            // If text is longer than 45 characters, cut it and show button
+            if (p.description.length > 45) {
+                // We use replace(/'/g, "&#39;") to prevent quotes from breaking the HTML
+                descHtml = `
+                    <p class="text-[10px] text-gray-500 mb-1 line-clamp-2">${p.description.substring(0, 45)}...</p>
+                    <button onclick='openProductModal(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="text-[10px] font-bold text-accent hover:underline mb-3">Read More</button>
+                `;
+            } else {
+                descHtml = `<p class="text-[10px] text-gray-500 mb-3">${p.description}</p>`;
+            }
+        }
+
         container.innerHTML += `
-        <div class="product-card p-3 relative">
+        <div class="product-card p-3 relative flex flex-col h-full">
             <button onclick="toggleHeart(${p.id})" class="absolute top-2 right-2 z-10 w-7 h-7 bg-white/80 rounded-full flex items-center justify-center shadow-sm">
                 <i class="${isFav ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart"></i>
             </button>
-            <div class="h-36 bg-gray-100 rounded-xl mb-2 overflow-hidden">
+            <div class="h-36 bg-gray-100 rounded-xl mb-2 overflow-hidden shrink-0">
                 <img src="${p.image_url}" class="w-full h-full object-cover">
             </div>
             <h4 class="font-bold text-primary text-sm truncate serif-font">${p.name}</h4>
-            <p class="text-accent font-bold text-xs mb-2">Le ${p.price}</p>
-            <button onclick="addToCart('${p.name}', ${p.price})" class="w-full py-2 rounded-lg text-xs font-bold border border-[var(--text-primary)] text-primary">Add to Cart</button>
+            
+            ${descHtml}
+            
+            <div class="mt-auto">
+                <p class="text-accent font-bold text-xs mb-2">Le ${p.price}</p>
+                <button onclick="addToCart('${p.name}', ${p.price})" class="w-full py-2 rounded-lg text-xs font-bold border border-[var(--text-primary)] text-primary hover:bg-primary hover:text-white transition">Add to Cart</button>
+            </div>
         </div>`;
     });
 }
@@ -121,9 +143,45 @@ function renderHorizontalList(products, container) {
     });
 }
 
+// --- NEW: MODAL LOGIC (Popups) ---
+
+function openProductModal(product) {
+    // 1. Set Image
+    document.getElementById('modal-img').src = product.image_url;
+    
+    // 2. Set Text Details
+    document.getElementById('modal-name').innerText = product.name;
+    document.getElementById('modal-price').innerText = `Le ${product.price}`;
+    document.getElementById('modal-desc').innerText = product.description || "No description available.";
+    
+    // 3. Set Stock Logic (Green for stock, Red for out)
+    const stockEl = document.getElementById('modal-stock');
+    if(product.stock > 0) {
+        stockEl.innerText = `${product.stock} In Stock`;
+        stockEl.className = "text-[10px] font-bold uppercase tracking-widest text-white bg-green-600 px-2 py-1 rounded";
+    } else {
+        stockEl.innerText = "Out of Stock";
+        stockEl.className = "text-[10px] font-bold uppercase tracking-widest text-white bg-red-500 px-2 py-1 rounded";
+    }
+
+    // 4. Bind the "Add to Cart" button inside the modal
+    const btn = document.getElementById('modal-add-btn');
+    btn.onclick = () => {
+        addToCart(product.name, product.price);
+        closeProductModal();
+    };
+
+    // 5. Show the modal
+    document.getElementById('product-modal').classList.remove('hidden');
+}
+
+function closeProductModal() {
+    document.getElementById('product-modal').classList.add('hidden');
+}
+
+
 // --- NAVIGATION LOGIC ---
 
-// 1. Open Specific Category (Shows Products)
 function openCategory(categoryName) {
     hideAllViews();
     const categoryView = document.getElementById('category-view');
@@ -138,7 +196,6 @@ function openCategory(categoryName) {
     }
 }
 
-// 2. Open "View All" (Shows List of Collections/Categories)
 function openAllCollections() {
     hideAllViews();
     const collectionsView = document.getElementById('collections-view');
@@ -148,11 +205,8 @@ function openAllCollections() {
         collectionsView.classList.remove('hidden');
         container.innerHTML = '';
         
-        // Render big cards for each category
         allCategoriesCache.forEach(cat => {
-            // Calculate how many items are in this category
             const count = allProductsCache.filter(p => p.category === cat.name).length;
-            
             container.innerHTML += `
             <div onclick="openCategory('${cat.name}')" class="relative h-40 rounded-xl overflow-hidden cursor-pointer group shadow-md">
                 <img src="${cat.image_url}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
@@ -193,13 +247,13 @@ function loadTheme() {
     document.documentElement.setAttribute('data-theme', savedTheme);
 }
 
-// --- SEARCH & FAVORITES (Keep existing logic) ---
+// --- SEARCH & FAVORITES ---
 
 function toggleHeart(id) { 
     if (favorites.includes(id)) favorites = favorites.filter(f => f !== id);
     else favorites.push(id);
     localStorage.setItem('bortehFavorites', JSON.stringify(favorites));
-    fetchProducts(); // Refresh UI
+    fetchProducts();
 }
 
 function renderFavorites() {
@@ -274,7 +328,6 @@ function initInstallButtons() {
     });
 }
 
-// --- NEW: SERVICE WORKER REGISTRATION ---
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       // Points to root because service-worker.js is in the same folder as index.html

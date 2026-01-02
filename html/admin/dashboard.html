@@ -6,7 +6,7 @@
     <title>Borteh Manager Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="icon" type="image/png" href="../../assets/css/images/logo1.png"">
+    <link rel="icon" type="image/png" href="../../assets/css/images/logo1.png">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,7 +19,9 @@
 
     <nav class="bg-[#5D4037] text-white p-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-white text-[#5D4037] flex items-center justify-center font-bold"><img src="../../assets/css/images/logo.png" alt="Borteh Logo" class="w-full h-full object-cover rounded-full"></div>
+            <div class="w-8 h-8 rounded-full bg-white text-[#5D4037] flex items-center justify-center font-bold">
+                <img src="../../assets/css/images/logo.png" alt="Borteh Logo" class="w-full h-full object-cover rounded-full">
+            </div>
             <h1 class="font-bold text-lg tracking-wide hidden sm:block">Manager Dashboard</h1>
         </div>
         
@@ -57,12 +59,23 @@
                         <input type="text" id="p-name" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none transition">
                     </div>
 
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Description</label>
+                        <textarea id="p-desc" rows="2" placeholder="Product details..." class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none transition"></textarea>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase">Price (Le)</label>
                             <input type="number" id="p-price" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
                         </div>
+                        
                         <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Stock</label>
+                            <input type="number" id="p-stock" value="1" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                        </div>
+
+                        <div class="col-span-2">
                             <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
                             <select id="p-category" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
                                 <option value="" disabled selected>Select...</option>
@@ -149,9 +162,16 @@
             <h3 class="text-lg font-bold text-[#5D4037] mb-6 border-b border-gray-100 pb-2">Edit Product</h3>
             
             <form id="edit-product-form" class="space-y-4">
-                <input type="hidden" id="edit-id"> <div>
+                <input type="hidden" id="edit-id"> 
+                
+                <div>
                     <label class="text-xs font-bold text-gray-500 uppercase">Product Name</label>
                     <input type="text" id="edit-name" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Description</label>
+                    <textarea id="edit-desc" rows="2" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none"></textarea>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3">
@@ -160,10 +180,15 @@
                         <input type="number" id="edit-price" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
-                        <select id="edit-category" class="w-full p-2 border border-gray-300 rounded-lg bg-white outline-none">
-                            </select>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Stock</label>
+                        <input type="number" id="edit-stock" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
                     </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
+                    <select id="edit-category" class="w-full p-2 border border-gray-300 rounded-lg bg-white outline-none">
+                    </select>
                 </div>
 
                 <button type="submit" class="w-full bg-[#D4AF37] hover:bg-[#b08d2b] text-white font-bold py-3 rounded-xl mt-2 transition-colors shadow-md">

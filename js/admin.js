@@ -8,25 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. CHECK: Are we on the Login Page?
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
-        // We are on login.html -> Handle Login
         loginForm.addEventListener('submit', handleLogin);
-        return; // Stop here, don't load dashboard logic
+        return; 
     }
 
     // 2. CHECK: Are we on the Dashboard?
-    // If no login form, we assume we are on dashboard.html
     const session = localStorage.getItem('supabase.auth.token');
     if (!session) {
-        // Not logged in? Go back to login
         window.location.href = 'login.html';
         return;
     }
 
-    // Load Dashboard Data
     fetchCategories(); 
     fetchProducts();   
     
-    // Dashboard Listeners
     const addProductForm = document.getElementById('add-product-form');
     if(addProductForm) addProductForm.addEventListener('submit', handleAddProduct);
 
@@ -56,11 +51,7 @@ async function handleLogin(e) {
         });
 
         if (error) throw error;
-
-        // Save session token (simple check)
         localStorage.setItem('supabase.auth.token', data.session.access_token);
-        
-        // Go to Dashboard
         window.location.href = 'dashboard.html';
 
     } catch (error) {
@@ -78,7 +69,6 @@ function logout() {
 
 
 // --- CATEGORY LOGIC ---
-
 async function fetchCategories() {
     const { data, error } = await window.supabaseClient
         .from('categories')
@@ -129,14 +119,12 @@ async function handleAddCategory(e) {
         const fileExt = file.name.split('.').pop();
         const fileName = `category_${Date.now()}.${fileExt}`;
         
-        // FIX 1: Changed bucket to 'product-images'
         const { error: imgError } = await window.supabaseClient.storage
             .from('product-images') 
             .upload(fileName, file);
 
         if (imgError) throw imgError;
 
-        // FIX 2: Changed bucket to 'product-images'
         const { data: publicUrlData } = window.supabaseClient.storage
             .from('product-images')
             .getPublicUrl(fileName);
@@ -163,7 +151,6 @@ async function handleAddCategory(e) {
 
 
 // --- PRODUCT LOGIC ---
-
 async function fetchProducts() {
     const list = document.getElementById('inventory-list');
     list.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">Loading...</td></tr>';
@@ -179,6 +166,7 @@ async function fetchProducts() {
     renderInventory(data);
 }
 
+// Updated to show Stock
 function renderInventory(products) {
     const list = document.getElementById('inventory-list');
     list.innerHTML = '';
@@ -200,7 +188,11 @@ function renderInventory(products) {
                         </div>
                     </div>
                 </td>
-                <td class="p-4 text-center"><span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold">In Stock</span></td>
+                <td class="p-4 text-center">
+                    <span class="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full font-bold">
+                       ${p.stock || 0} left
+                    </span>
+                </td>
                 <td class="p-4 font-bold text-gray-700">Le ${p.price}</td>
                 <td class="p-4 text-right">
                     <button onclick="openEditModal(${p.id})" class="text-blue-500 hover:text-blue-700 px-2 py-1 transition"><i class="fa-solid fa-pen"></i></button>
@@ -211,6 +203,7 @@ function renderInventory(products) {
     });
 }
 
+// Updated to save Description and Stock
 async function handleAddProduct(e) {
     e.preventDefault();
     const categorySelect = document.getElementById('p-category');
@@ -227,6 +220,8 @@ async function handleAddProduct(e) {
         const file = document.getElementById('p-image-file').files[0];
         const name = document.getElementById('p-name').value;
         const price = document.getElementById('p-price').value;
+        const desc = document.getElementById('p-desc').value; // New Field
+        const stock = document.getElementById('p-stock').value; // New Field
         const isNew = document.getElementById('p-new').checked;
 
         if (!file) throw new Error("Please select an image");
@@ -234,20 +229,24 @@ async function handleAddProduct(e) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}.${fileExt}`;
         
-        // FIX 3: Changed bucket to 'product-images'
         const { error: uploadError } = await window.supabaseClient.storage
             .from('product-images')
             .upload(fileName, file);
 
         if (uploadError) throw uploadError;
 
-        // FIX 4: Changed bucket to 'product-images'
         const { data: urlData } = window.supabaseClient.storage
             .from('product-images')
             .getPublicUrl(fileName);
 
         const { error: dbError } = await window.supabaseClient.from('products').insert([{
-            name: name, price: price, category: category, image_url: urlData.publicUrl, is_new_arrival: isNew
+            name: name, 
+            price: price, 
+            description: desc,  // Saving Desc
+            stock: stock,       // Saving Stock
+            category: category, 
+            image_url: urlData.publicUrl, 
+            is_new_arrival: isNew
         }]);
 
         if (dbError) throw dbError;
@@ -274,7 +273,7 @@ async function deleteProduct(id) {
 }
 
 
-// --- EDIT LOGIC ---
+// --- EDIT LOGIC (Updated) ---
 
 function openEditModal(id) {
     const product = allProducts.find(p => p.id === id);
@@ -282,6 +281,10 @@ function openEditModal(id) {
     document.getElementById('edit-id').value = product.id;
     document.getElementById('edit-name').value = product.name;
     document.getElementById('edit-price').value = product.price;
+    // Populate new fields
+    document.getElementById('edit-desc').value = product.description || ''; 
+    document.getElementById('edit-stock').value = product.stock || 0;
+    
     document.getElementById('edit-category').value = product.category;
     document.getElementById('edit-modal').classList.remove('hidden');
 }
@@ -295,12 +298,22 @@ async function handleEditSave(e) {
     const id = document.getElementById('edit-id').value;
     const name = document.getElementById('edit-name').value;
     const price = document.getElementById('edit-price').value;
+    const desc = document.getElementById('edit-desc').value;    // New
+    const stock = document.getElementById('edit-stock').value;  // New
     const category = document.getElementById('edit-category').value;
     
     const btn = e.target.querySelector('button');
     btn.innerText = 'Updating...';
 
-    const { error } = await window.supabaseClient.from('products').update({ name, price, category }).eq('id', id);
+    const { error } = await window.supabaseClient.from('products')
+        .update({ 
+            name, 
+            price, 
+            description: desc, // Update Desc
+            stock: stock,      // Update Stock
+            category 
+        })
+        .eq('id', id);
 
     if (error) alert('Update failed: ' + error.message);
     else {

@@ -96,7 +96,7 @@ h1, h2, h3, .serif-font { font-family: 'Playfair Display', serif; }
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: var(--bg-card); /* White background for transparent PNGs */
+    background: var(--bg-card);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,10 +104,9 @@ h1, h2, h3, .serif-font { font-family: 'Playfair Display', serif; }
     border: 2px solid var(--accent);
     margin-bottom: 5px;
     transition: transform 0.2s, box-shadow 0.2s;
-    overflow: hidden; /* IMPORTANT: Keeps the image inside the circle */
+    overflow: hidden; 
 }
 
-/* This ensures the image covers the circle perfectly */
 .cat-circle img {
     width: 100%;
     height: 100%;
@@ -118,4 +117,14 @@ h1, h2, h3, .serif-font { font-family: 'Playfair Display', serif; }
     transform: scale(1.1); 
     border-color: var(--text-primary);
     box-shadow: 0 0 15px rgba(198, 168, 124, 0.4);
+}
+
+/* --- NEW: DESCRIPTION TRUNCATION (Line Clamp) --- */
+/* This ensures long text cuts off cleanly after 2 lines */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

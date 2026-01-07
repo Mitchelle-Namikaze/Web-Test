@@ -10,12 +10,24 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Fade in animation for the modal */
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .modal-animate { animation: fadeIn 0.2s ease-out forwards; }
+        /* Force the body and main containers to use theme variables */
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dashboard-card {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(198, 168, 124, 0.1);
+        }
+        /* Dashboard specific: ensure inputs are visible in dark mode */
+        input, select, textarea {
+            background-color: var(--bg-main) !important;
+            color: var(--text-primary) !important;
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="min-h-screen antialiased">
 
     <nav class="bg-[#5D4037] text-white p-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-3">
@@ -39,54 +51,52 @@
         
         <div class="lg:col-span-4 space-y-6">
             
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                <h2 class="text-xl font-bold text-[#5D4037] mb-6 flex items-center gap-2">
+            <div class="dashboard-card p-6 rounded-2xl shadow-sm">
+                <h2 class="text-xl font-bold text-accent mb-6 flex items-center gap-2">
                     <i class="fa-solid fa-plus-circle"></i> Add New Item
                 </h2>
                 
                 <form id="add-product-form" class="space-y-4">
-                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:bg-gray-50 transition cursor-pointer relative group">
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-4 text-center hover:bg-black/5 transition cursor-pointer relative group">
                         <input type="file" id="p-image-file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewImage(event, 'image-preview-tag', 'upload-preview')">
                         <div id="upload-preview">
-                            <i class="fa-solid fa-cloud-upload-alt text-3xl text-gray-300 mb-2 group-hover:text-[#5D4037]"></i>
-                            <p class="text-xs text-gray-500 font-bold">Click to Upload Photo</p>
+                            <i class="fa-solid fa-cloud-upload-alt text-3xl text-gray-300 mb-2 group-hover:text-accent"></i>
+                            <p class="text-xs text-gray-500 font-bold uppercase">Click to Upload Photo</p>
                         </div>
                         <img id="image-preview-tag" class="hidden w-full h-48 object-cover rounded-lg mt-2">
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase">Product Name</label>
-                        <input type="text" id="p-name" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none transition">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Product Name</label>
+                        <input type="text" id="p-name" required class="w-full p-3 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none transition text-sm">
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase">Description</label>
-                        <textarea id="p-desc" rows="2" placeholder="Product details..." class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none transition"></textarea>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Description</label>
+                        <textarea id="p-desc" rows="2" placeholder="Product details..." class="w-full p-3 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none transition text-sm"></textarea>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase">Price (Le)</label>
-                            <input type="number" id="p-price" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Price (Le)</label>
+                            <input type="number" id="p-price" required class="w-full p-3 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                         </div>
-                        
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase">Stock</label>
-                            <input type="number" id="p-stock" value="1" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Stock</label>
+                            <input type="number" id="p-stock" value="1" required class="w-full p-3 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                         </div>
-
                         <div class="col-span-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
-                            <select id="p-category" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Category</label>
+                            <select id="p-category" required class="w-full p-3 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                                 <option value="" disabled selected>Select...</option>
-                                </select>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                        <label class="text-sm text-gray-600 flex items-center gap-2">
-                            <input type="checkbox" id="p-new" checked class="w-4 h-4 text-[#5D4037] rounded focus:ring-0">
-                            Mark as "New Arrival"
+                    <div class="flex justify-between items-center bg-black/5 p-3 rounded-lg">
+                        <label class="text-xs text-gray-500 flex items-center gap-2 font-bold uppercase">
+                            <input type="checkbox" id="p-new" checked class="w-4 h-4 text-accent rounded focus:ring-0">
+                            New Arrival
                         </label>
                     </div>
 
@@ -96,28 +106,26 @@
                 </form>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-16 h-16 bg-[#D4AF37]/20 rounded-bl-full -mr-2 -mt-2"></div>
-                
-                <h2 class="text-lg font-bold text-[#5D4037] mb-4 flex items-center gap-2">
+            <div class="dashboard-card p-6 rounded-2xl shadow-sm relative overflow-hidden">
+                <h2 class="text-lg font-bold text-accent mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-layer-group"></i> Create Category
                 </h2>
                 
                 <form id="add-category-form" class="space-y-4">
                     <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-full flex flex-col items-center justify-center cursor-pointer hover:border-[#D4AF37] relative flex-shrink-0">
+                        <div class="w-16 h-16 bg-black/5 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-full flex flex-col items-center justify-center cursor-pointer hover:border-accent relative flex-shrink-0">
                             <input type="file" id="c-image-file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required onchange="previewImage(event, 'cat-preview-tag', 'cat-upload-icon')">
                             <i id="cat-upload-icon" class="fa-solid fa-camera text-gray-400"></i>
                             <img id="cat-preview-tag" class="hidden absolute inset-0 w-full h-full object-cover rounded-full">
                         </div>
                         
                         <div class="flex-1">
-                            <label class="text-xs font-bold text-gray-500 uppercase">Category Name</label>
-                            <input type="text" id="c-name" placeholder="e.g. Watches" required class="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Category Name</label>
+                            <input type="text" id="c-name" placeholder="e.g. Watches" required class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                         </div>
                     </div>
                     
-                    <button type="submit" class="w-full bg-white border border-[#5D4037] text-[#5D4037] hover:bg-[#5D4037] hover:text-white font-bold py-2 rounded-lg transition-colors text-sm">
+                    <button type="submit" class="w-full bg-transparent border border-accent text-accent hover:bg-accent hover:text-white font-bold py-2 rounded-lg transition-colors text-xs uppercase tracking-widest">
                         Add Category
                     </button>
                 </form>
@@ -125,95 +133,122 @@
 
         </div>
 
-        <div class="lg:col-span-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <h2 class="text-xl font-bold text-[#5D4037]">Inventory</h2>
-                
-                <div id="category-filters" class="flex flex-wrap gap-2 bg-white rounded-lg p-1 shadow-sm">
-                    <button onclick="filterInventory('all')" class="px-4 py-1 text-xs font-bold rounded-md bg-[#5D4037] text-white">All</button>
-                    </div>
-            </div>
+        <div class="lg:col-span-8 space-y-10">
             
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden min-h-[500px]">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50 text-gray-500 text-[10px] uppercase tracking-wider">
-                        <tr>
-                            <th class="p-4">Item</th>
-                            <th class="p-4 text-center">Stock</th>
-                            <th class="p-4">Price</th>
-                            <th class="p-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventory-list" class="divide-y divide-gray-100 text-sm">
-                        </tbody>
-                </table>
+            <div>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h2 class="text-xl font-bold text-primary serif-font">Product Inventory</h2>
+                    <div id="category-filters" class="flex flex-wrap gap-2">
+                        <button onclick="filterInventory('all')" class="px-4 py-1 text-[10px] uppercase font-bold rounded-full bg-[#5D4037] text-white">All Items</button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card rounded-2xl shadow-sm overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-black/5 text-gray-400 text-[10px] uppercase tracking-widest">
+                            <tr>
+                                <th class="p-4">Item</th>
+                                <th class="p-4 text-center">Stock</th>
+                                <th class="p-4">Price</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-list" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
+                            </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
+            <div>
+                <h2 class="text-xl font-bold text-primary serif-font mb-6">Category Management</h2>
+                <div class="dashboard-card rounded-2xl shadow-sm overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-black/5 text-gray-400 text-[10px] uppercase tracking-widest">
+                            <tr>
+                                <th class="p-4">Category Info</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="category-list" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <div id="edit-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-2xl p-6 relative modal-animate">
-            
-            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50 transition">
+        <div class="dashboard-card w-full max-w-sm mx-4 rounded-3xl shadow-2xl p-6 relative modal-animate">
+            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 w-8 h-8 flex items-center justify-center rounded-full transition">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-
-            <h3 class="text-lg font-bold text-[#5D4037] mb-6 border-b border-gray-100 pb-2">Edit Product</h3>
+            <h3 class="text-xl font-bold text-primary serif-font mb-6">Edit Product</h3>
             
             <form id="edit-product-form" class="space-y-4">
                 <input type="hidden" id="edit-id"> 
-                
                 <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase">Product Name</label>
-                    <input type="text" id="edit-name" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Name</label>
+                    <input type="text" id="edit-name" class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                 </div>
-
                 <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase">Description</label>
-                    <textarea id="edit-desc" rows="2" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none"></textarea>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Description</label>
+                    <textarea id="edit-desc" rows="2" class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm"></textarea>
                 </div>
-                
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase">Price</label>
-                        <input type="number" id="edit-price" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Price</label>
+                        <input type="number" id="edit-price" class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase">Stock</label>
-                        <input type="number" id="edit-stock" class="w-full p-2 border border-gray-300 rounded-lg focus:border-[#D4AF37] outline-none">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Stock</label>
+                        <input type="number" id="edit-stock" class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                     </div>
                 </div>
-
                 <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
-                    <select id="edit-category" class="w-full p-2 border border-gray-300 rounded-lg bg-white outline-none">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Category</label>
+                    <select id="edit-category" class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
                     </select>
                 </div>
-
-                <button type="submit" class="w-full bg-[#D4AF37] hover:bg-[#b08d2b] text-white font-bold py-3 rounded-xl mt-2 transition-colors shadow-md">
+                <button type="submit" class="w-full bg-accent text-gold font-bold py-3 rounded-xl mt-2 transition-transform active:scale-95 shadow-md">
                     Save Changes
                 </button>
             </form>
         </div>
     </div>
 
+    <div id="edit-category-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="dashboard-card w-full max-w-sm mx-4 rounded-3xl shadow-2xl p-6 relative modal-animate">
+            <button onclick="closeEditCategoryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 w-8 h-8 flex items-center justify-center rounded-full transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <h3 class="text-xl font-bold text-primary serif-font mb-6">Edit Category</h3>
+            
+            <form id="edit-category-form" class="space-y-4">
+                <input type="hidden" id="edit-cat-id">
+                <div class="flex justify-center mb-4">
+                     <div class="w-24 h-24 bg-black/5 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-full flex flex-col items-center justify-center cursor-pointer hover:border-accent relative overflow-hidden group">
+                        <input type="file" id="edit-cat-file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="previewImage(event, 'edit-cat-preview', 'edit-cat-icon')">
+                        <i id="edit-cat-icon" class="fa-solid fa-camera text-gray-400 text-xl group-hover:text-accent hidden"></i>
+                        <img id="edit-cat-preview" class="absolute inset-0 w-full h-full object-cover rounded-full">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Category Name</label>
+                    <input type="text" id="edit-cat-name" required class="w-full p-2 rounded-lg border-none focus:ring-2 focus:ring-accent outline-none text-sm">
+                </div>
+
+                <button type="submit" class="w-full bg-accent text-white font-bold py-3 rounded-xl mt-2 transition-transform active:scale-95 shadow-md">
+                    Update Category
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/app.js"></script>
     <script src="../../js/supabase-client.js"></script>
     <script src="../../js/admin.js"></script> 
-    
-    <script>
-        function previewImage(event, imgId, iconId) {
-            const file = event.target.files[0];
-            if(file){
-                const reader = new FileReader();
-                reader.onload = function(e){
-                    document.getElementById(imgId).src = e.target.result;
-                    document.getElementById(imgId).classList.remove('hidden');
-                    if(iconId) document.getElementById(iconId).classList.add('hidden');
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
 </body>
 </html>
